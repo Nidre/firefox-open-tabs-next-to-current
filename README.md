@@ -1,4 +1,4 @@
-Openn Tabs Next To Current Plus
+Open Tabs Next To Current Plus
 =================================
 
 Open all new tabs always to the right of the current one. This doesn't include
