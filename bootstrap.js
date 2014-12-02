@@ -1,7 +1,7 @@
 Components.utils.import("resource://gre/modules/devtools/Console.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 
-var extensionResource = "chrome://opentabsnexttocurrent/content/opentabsnexttocurrent.jsm";
+var extensionResource = "chrome://opentabsnexttocurrent/content/opentabsnexttocurrentplus.jsm";
 
 var initFunction = function(domWindow) {
     Components.utils.import(extensionResource);
