@@ -3,7 +3,7 @@
     <Description about="urn:mozilla:install-manifest">
         <em:id>opentabsnexttocurrentplus@nidre</em:id>
         <em:name>Open Tabs Next to Current+</em:name>
-        <em:version>1.0.0</em:version>
+        <em:version>1.0.1</em:version>
         <em:type>2</em:type>
         <em:bootstrap>true</em:bootstrap>
         <em:creator>Erdin Kacan</em:creator>
