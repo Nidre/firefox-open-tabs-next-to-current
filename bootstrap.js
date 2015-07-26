@@ -1,17 +1,17 @@
 Components.utils.import("resource://gre/modules/devtools/Console.jsm");
 Components.utils.import("resource://gre/modules/Services.jsm");
 
-var extensionResource = "chrome://opentabsnexttocurrent/content/opentabsnexttocurrentplus.jsm";
+var extensionResource = "chrome://opentabsnexttocurrentplus/content/opentabsnexttocurrent.jsm";
 
 var initFunction = function(domWindow) {
     Components.utils.import(extensionResource);
-    domWindow.gOpenTabsNextToCurrent = new OpenTabsNextToCurrent();
-    domWindow.gOpenTabsNextToCurrent.initialize(domWindow);
+    domWindow.gOpenTabsNextToCurrentPlus = new OpenTabsNextToCurrent();
+    domWindow.gOpenTabsNextToCurrentPlus.initialize(domWindow);
 };
 
 var destroyFunction = function(domWindow) {
-    domWindow.gOpenTabsNextToCurrent.destroy();
-    domWindow.gOpenTabsNextToCurrent = undefined;
+    domWindow.gOpenTabsNextToCurrentPlus.destroy();
+    domWindow.gOpenTabsNextToCurrentPlus = undefined;
     Components.utils.unload(extensionResource);
 };
 
@@ -60,4 +60,3 @@ function shutdown(data, reason) {
     windowMediator.removeListener(windowListener);
     callOnOpenWindows(destroyFunction);
 }
-
