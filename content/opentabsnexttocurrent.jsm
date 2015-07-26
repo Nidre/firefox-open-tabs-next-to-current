@@ -43,24 +43,24 @@ function OpenTabsNextToCurrent() {
 
       this.onElementClick = function(e)
       {
-        if(e.target.id == "new-tab-button")
+        if(e.target.id == "new-tab-button" || e.target.id == "tabbrowser-tabs")
         {
-          // console.log("Click");
+          console.log("Click");
           this.onClick = true;
         }
         else
         {
-            // console.log("Click false");
+            console.log("Click false: " + e.target.id);
           this.onClick = false;
         }
 
       }.bind(this);
 
       this.onTabOpen = function(anEvent) {
-            // console.log("this.onClick: "  + this.onClick);
-            //           console.log("this.busy: "  + this.busy);
+            console.log("this.onClick: "  + this.onClick);
+                      console.log("this.busy: "  + this.busy);
         if (!this.busy && !this.onClick) {
-            // console.log("Sibling");
+            console.log("Sibling");
           this.onClick = false;
           var openingTab = anEvent.target;
           var currentTab = this.gBrowser.mCurrentTab;
