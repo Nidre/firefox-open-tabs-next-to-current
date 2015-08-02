@@ -1,7 +1,7 @@
 Open Tabs Next To Current Plus
 =================================
 
-[Download Addon] ( [Github]( https://addons.mozilla.org/en-US/firefox/addon/open-tabs-next-to-current-plus/ ))
+[Download Addon]( https://addons.mozilla.org/en-US/firefox/addon/open-tabs-next-to-current-plus/ )
 
 Opens all new tabs always next to the current tab except when a new tab is created either by new tab button or hotkey (Default Ctrl + Shift + Alt + T).
 - Ctrl + T : Open new tab next to current.
