@@ -1,0 +1,12 @@
+<vbox xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  <setting title="Hotkey Modifier" pref="extensions.opentabsnexttocurrentplus.hotkey-modifier" type="menulist" desc="Modifier for Open new tab at the end hotkey.">
+  <menulist>
+    <menupopup>
+      <menuitem value="control-shift-alt-" label="CTRL + SHIFT + ALT" />
+      <menuitem value="control-shift-" label="CTRL + SHIFT" />
+      <menuitem value="control-" label="CTRL"/>
+    </menupopup>
+  </menulist>
+  </setting>
+  <setting title="Hotkey" pref="extensions.opentabsnexttocurrentplus.hotkey" type="string" desc="Key for Open new tab at the end hotkey." />
+</vbox>

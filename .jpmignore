@@ -1,0 +1,21 @@
+# Ignore .DS_Store files created by mac
+.DS_Store
+
+# Doc Files
+/docs/
+
+# Test Files
+/test/
+
+# GIT
+/.git/
+
+# Other files
+.gitignore
+.jpmignore
+.jshintrc
+.project
+*.bat
+
+# Existing packages
+*.xpi

@@ -1,43 +1,44 @@
+EXPORTED_SYMBOLS = ["OpenTabsNextToCurrentPlus"];
+
 const { utils: Cu } = Components;
 const COMMONJS_URI = "resource://gre/modules/commonjs";
-const { require } = Cu.import(COMMONJS_URI + "/toolkit/require.js", {});
-
 const MODULES_URI = "resource://gre/modules";
-Components.utils.import(MODULES_URI + "/devtools/Console.jsm");
-Components.utils.import(MODULES_URI + "/Services.jsm");
 
+const { require } = Cu.import(COMMONJS_URI + "/toolkit/require.js", {});
+Cu.import(MODULES_URI + "/devtools/Console.jsm");
+Cu.import(MODULES_URI + "/Services.jsm");
 const { Hotkey } = require("sdk/hotkeys");
-const prefs = require("sdk/simple-prefs");
 const tabs = require("sdk/tabs");
+var newTabAtTheEndHotkey;
+
+var prefsListener;
 
 var onClick = false;
 
-EXPORTED_SYMBOLS = ["OpenTabsNextToCurrent"];
-
-function OpenTabsNextToCurrent() {
-  this.busy = false;
-  onClick = false;
-
-  prefs.on("", onPrefChange);
-
-  function onPrefChange(prefName)
+function onPrefsChanged(branch, name) {
+  if(branch.getPrefType("hotkey-modifier") && branch.getPrefType("hotkey"))
   {
-    console.log("Settings Changed");
-    // var keyCombo;
-    // if(prefs['hotkeyCtrl'] && prefs['hotkeyShift'] && prefs['hotkeyAlt'])keyCombo = "control-shift-alt-t";
-    // if(prefs['hotkeyCtrl'] && prefs['hotkeyShift'])keyCombo = "control-shift-t";
-    // if(prefs['hotkeyCtrl']) keyCombo = "control-t";
-    // console.log("New Hotkey: " + keyCombo);
-    var newTabAtTheEnd = Hotkey({
-      combo: "control-shift-t",
+    var hotkeyString = branch.getCharPref("hotkey").substring(0,1);
+    branch.setCharPref("hotkey",hotkeyString);
+    var keyCombo = branch.getCharPref("hotkey-modifier") + hotkeyString;
+    if(typeof newTabAtTheEndHotkey !== 'undefined')
+    {
+        newTabAtTheEndHotkey.destroy();
+    }
+    newTabAtTheEndHotkey = Hotkey({
+      combo: keyCombo,
       onPress: function()
       {
-        //  console.log("Hotkey");
-         onClick = true;
-         tabs.open("");
+        onClick = true;
+        tabs.open("");
       }
     });
   }
+}
+
+function OpenTabsNextToCurrentPlus() {
+  this.busy = false;
+  onClick = false;
 
   this.initialize = function(domWindow) {
     if (!domWindow ||
@@ -53,14 +54,19 @@ function OpenTabsNextToCurrent() {
       this.domWindow.addEventListener("SSWindowStateReady", this.onReady);
       this.tabContainer.addEventListener("TabOpen", this.onTabOpen);
       this.domWindow.addEventListener("click",this.onElementClick,false);
-      console.log("Test");
-      onPrefChange();
+      Components.utils.import("chrome://opentabsnexttocurrentplus/content/PrefListener.jsm");
+      prefsListener = new PrefListener("extensions.opentabsnexttocurrentplus.",onPrefsChanged);
+      prefsListener.register(true);
     };
     this.destroy = function() {
       if (!this.domWindow ||
         !this.domWindow.gBrowser ||
         !this.domWindow.gBrowser.tabContainer) {
           return;
+        }
+        if(typeof newTabAtTheEndHotkey !== 'undefined')
+        {
+            newTabAtTheEndHotkey.destroy();
         }
         this.domWindow.removeEventListener("SSWindowStateBusy", this.onBusy);
         this.domWindow.removeEventListener("SSWindowStateReady", this.onReady);
