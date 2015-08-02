@@ -1,0 +1,10 @@
+{
+  "fullName": "Open Tabs Next To Current Plus",
+  "title": "Open Tabs Next To Current Plus",
+  "name": "opentabsnexttocurrentplus",
+  "version": "1.0.4",
+  "author": "Erdin Kacan",
+  "homepage": "https://github.com/Nidre/firefox-open-tabs-next-to-current",
+  "main": "content/OpenTabsNextToCurrentPlus.jsm",
+  "id": "opentabsnexttocurrentplus@nidre"
+}

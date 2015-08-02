@@ -1,18 +1,20 @@
-Components.utils.import("resource://gre/modules/devtools/Console.jsm");
-Components.utils.import("resource://gre/modules/Services.jsm");
+const Cu = Components.utils;
 
-var extensionResource = "chrome://opentabsnexttocurrentplus/content/opentabsnexttocurrent.jsm";
+Cu.import("resource://gre/modules/Services.jsm");
+
+const extensionResource = "chrome://opentabsnexttocurrentplus/content/OpenTabsNextToCurrentPlus.jsm";
+const defaultPreferencesLoaderLink = 'chrome://opentabsnexttocurrentplus/content/prefLoader.jsm';
 
 var initFunction = function(domWindow) {
-    Components.utils.import(extensionResource);
-    domWindow.gOpenTabsNextToCurrentPlus = new OpenTabsNextToCurrent();
+    Cu.import(extensionResource);
+    domWindow.gOpenTabsNextToCurrentPlus = new OpenTabsNextToCurrentPlus();
     domWindow.gOpenTabsNextToCurrentPlus.initialize(domWindow);
 };
 
 var destroyFunction = function(domWindow) {
     domWindow.gOpenTabsNextToCurrentPlus.destroy();
     domWindow.gOpenTabsNextToCurrentPlus = undefined;
-    Components.utils.unload(extensionResource);
+    Cu.unload(extensionResource);
 };
 
 function simpleToDomWindow(aWindow) {
@@ -53,10 +55,24 @@ function callOnOpenWindows(someFunction) {
 function install() {}
 function uninstall() {}
 function startup(data, reason) {
+    loadDefaultPreferences(data.installPath);
     callOnOpenWindows(initFunction);
     windowMediator.addListener(windowListener);
 }
 function shutdown(data, reason) {
+  if (reason != APP_SHUTDOWN) unloadDefaultPreferences();
+
     windowMediator.removeListener(windowListener);
     callOnOpenWindows(destroyFunction);
+}
+
+function loadDefaultPreferences(installPath) {
+    Cu.import(defaultPreferencesLoaderLink);
+
+    PrefLoader.loadDefaultPrefs(installPath,"prefs.js")
+}
+function unloadDefaultPreferences() {
+    PrefLoader.clearDefaultPrefs("extensions.opentabsnexttocurrentplus.");
+
+    Cu.unload(defaultPreferencesLoaderLink);
 }
