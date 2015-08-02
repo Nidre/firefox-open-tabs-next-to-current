@@ -1,11 +1,43 @@
-Components.utils.import("resource://gre/modules/devtools/Console.jsm");
-Components.utils.import("resource://gre/modules/Services.jsm");
+const { utils: Cu } = Components;
+const COMMONJS_URI = "resource://gre/modules/commonjs";
+const { require } = Cu.import(COMMONJS_URI + "/toolkit/require.js", {});
+
+const MODULES_URI = "resource://gre/modules";
+Components.utils.import(MODULES_URI + "/devtools/Console.jsm");
+Components.utils.import(MODULES_URI + "/Services.jsm");
+
+const { Hotkey } = require("sdk/hotkeys");
+const prefs = require("sdk/simple-prefs");
+const tabs = require("sdk/tabs");
+
+var onClick = false;
 
 EXPORTED_SYMBOLS = ["OpenTabsNextToCurrent"];
 
 function OpenTabsNextToCurrent() {
   this.busy = false;
-  this.onClick = false;
+  onClick = false;
+
+  prefs.on("", onPrefChange);
+
+  function onPrefChange(prefName)
+  {
+    console.log("Settings Changed");
+    // var keyCombo;
+    // if(prefs['hotkeyCtrl'] && prefs['hotkeyShift'] && prefs['hotkeyAlt'])keyCombo = "control-shift-alt-t";
+    // if(prefs['hotkeyCtrl'] && prefs['hotkeyShift'])keyCombo = "control-shift-t";
+    // if(prefs['hotkeyCtrl']) keyCombo = "control-t";
+    // console.log("New Hotkey: " + keyCombo);
+    var newTabAtTheEnd = Hotkey({
+      combo: "control-shift-t",
+      onPress: function()
+      {
+        //  console.log("Hotkey");
+         onClick = true;
+         tabs.open("");
+      }
+    });
+  }
 
   this.initialize = function(domWindow) {
     if (!domWindow ||
@@ -21,6 +53,8 @@ function OpenTabsNextToCurrent() {
       this.domWindow.addEventListener("SSWindowStateReady", this.onReady);
       this.tabContainer.addEventListener("TabOpen", this.onTabOpen);
       this.domWindow.addEventListener("click",this.onElementClick,false);
+      console.log("Test");
+      onPrefChange();
     };
     this.destroy = function() {
       if (!this.domWindow ||
@@ -45,23 +79,23 @@ function OpenTabsNextToCurrent() {
       {
         if(e.target.id == "new-tab-button" || e.target.id == "tabbrowser-tabs")
         {
-          console.log("Click");
-          this.onClick = true;
+          // console.log("Click");
+          onClick = true;
         }
         else
         {
-            console.log("Click false: " + e.target.id);
-          this.onClick = false;
+          // console.log("Click false: " + e.target.id);
+          onClick = false;
         }
 
       }.bind(this);
 
       this.onTabOpen = function(anEvent) {
-            console.log("this.onClick: "  + this.onClick);
-                      console.log("this.busy: "  + this.busy);
-        if (!this.busy && !this.onClick) {
-            console.log("Sibling");
-          this.onClick = false;
+        // console.log("onClick: "  + onClick);
+        // console.log("this.busy: "  + this.busy);
+        if (!this.busy && !onClick) {
+          // console.log("Sibling");
+          onClick = false;
           var openingTab = anEvent.target;
           var currentTab = this.gBrowser.mCurrentTab;
           this.gBrowser.moveTabTo(openingTab, currentTab.nextSibling._tPos);
