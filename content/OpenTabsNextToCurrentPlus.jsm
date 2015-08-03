@@ -30,7 +30,7 @@ function onPrefsChanged(branch, name) {
       onPress: function()
       {
         onClick = true;
-        tabs.open("");
+        tabs.open("about:newtab");
       }
     });
   }
